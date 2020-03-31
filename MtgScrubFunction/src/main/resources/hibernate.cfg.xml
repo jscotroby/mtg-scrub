@@ -13,7 +13,7 @@
             com.mysql.jdbc.Driver
         </property>
 
-        <mapping class="helloworld.CardEntry" />
+        <mapping class="mtgscrub.CardEntry" />
 
     </session-factory>
 </hibernate-configuration>

@@ -1,4 +1,4 @@
-package helloworld;
+package mtgscrub;
 
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;

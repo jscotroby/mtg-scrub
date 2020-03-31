@@ -1,4 +1,4 @@
-package helloworld;
+package mtgscrub;
 
 import java.util.Collections;
 import java.util.HashMap;

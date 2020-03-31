@@ -1,4 +1,4 @@
-package helloworld;
+package mtgscrub;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
