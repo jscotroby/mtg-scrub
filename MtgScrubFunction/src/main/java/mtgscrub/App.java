@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,11 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * Handler for requests to Lambda function.
@@ -23,10 +29,22 @@ public class App implements RequestHandler<Object, Object> {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            CardEntry cardEntry = new CardEntry();
-            cardEntry.setId(1);
-            cardEntry.setName("Test");
-            session.save(cardEntry);
+
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<CardEntry> criteriaRoot = criteriaBuilder.createQuery(CardEntry.class);
+            Root<CardEntry> root = criteriaRoot.from(CardEntry.class);
+            criteriaRoot.select(root);
+
+            Query query = session.createQuery(criteriaRoot);
+            List cardEntries = query.getResultList();
+
+            if(cardEntries.isEmpty()) {
+                CardEntry cardEntry = new CardEntry();
+                cardEntry.setId(1);
+                cardEntry.setName("Test");
+                session.save(cardEntry);
+            }
+
             session.getTransaction().commit();
         }
 

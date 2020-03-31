@@ -19,17 +19,16 @@ public class HibernateUtil {
                 + System.getenv("RDS_HOSTNAME")
                 + "/"
                 + System.getenv("RDS_DB_NAME");
-        String username = System.getenv("RDS_USERNAME");
-        String password = System.getenv("RDS_PASSWORD");
+        String username = "" + System.getenv("RDS_USERNAME");
+        String password = "" + System.getenv("RDS_PASSWORD");
 
-        System.out.println(username);
         configuration.setProperty("hibernate.connection.url", jdbcUrl)
                 .setProperty("hibernate.connection.username", username)
                 .setProperty("hibernate.connection.password", password);
 
         configuration.addAnnotatedClass(CardEntry.class);
 
-        configuration.configure();
+        configuration.configure("hibernate.cfg.xml");
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
 
         try {

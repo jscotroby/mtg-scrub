@@ -3,9 +3,24 @@ package mtgscrub;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.EnvironmentVariables;
 
 public class AppTest {
+
+  @Rule
+  public final EnvironmentVariables environmentVariables = new EnvironmentVariables();
+
+  @Before
+  public void init() {
+    environmentVariables.set("RDS_USERNAME", "mtg");
+    environmentVariables.set("RDS_PASSWORD", "pw");
+    environmentVariables.set("RDS_DB_NAME", "mtg_scrub_test");
+    environmentVariables.set("RDS_HOSTNAME", "localhost");
+  }
   @Test
   public void successfulResponse() {
     App app = new App();
