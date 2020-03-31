@@ -29,8 +29,7 @@ public class AppTest {
     assertEquals(result.getHeaders().get("Content-Type"), "application/json");
     String content = result.getBody();
     assertNotNull(content);
-    assertTrue(content.contains("\"message\""));
-    assertTrue(content.contains("\"hello world, I'm live\""));
-    assertTrue(content.contains("\"location\""));
+    assertTrue(content.contains("\"rowsEffected\""));
+    assertTrue(content.contains("0") || content.contains("1"));
   }
 }

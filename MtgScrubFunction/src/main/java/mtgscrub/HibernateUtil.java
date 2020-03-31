@@ -24,7 +24,9 @@ public class HibernateUtil {
 
         configuration.setProperty("hibernate.connection.url", jdbcUrl)
                 .setProperty("hibernate.connection.username", username)
-                .setProperty("hibernate.connection.password", password);
+                .setProperty("hibernate.connection.password", password)
+                .setProperty("hibernate.jdbc.batch_size", "50");
+
 
         configuration.addAnnotatedClass(CardEntry.class);
 

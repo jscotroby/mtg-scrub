@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -25,6 +26,8 @@ import javax.persistence.criteria.Root;
 public class App implements RequestHandler<Object, Object> {
 
     public Object handleRequest(final Object input, final Context context) {
+
+        int rowsEffected = 0;
 
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         try (Session session = sessionFactory.openSession()) {
@@ -42,13 +45,16 @@ public class App implements RequestHandler<Object, Object> {
                 CardEntry cardEntry = new CardEntry();
                 cardEntry.setId(1);
                 cardEntry.setName("Test");
-                session.save(cardEntry);
+                session.persist(cardEntry);
+                session.flush();
+                rowsEffected = 1;
             }
 
             session.getTransaction().commit();
         }
 
-
+        GatewayResponseBody gatewayResponseBody = new GatewayResponseBody();
+        gatewayResponseBody.setRowsEffected(rowsEffected);
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -56,7 +62,7 @@ public class App implements RequestHandler<Object, Object> {
         try {
             final String pageContents = this.getPageContents("https://checkip.amazonaws.com");
             String output = String.format("{ \"message\": \"hello world, I'm live\", \"location\": \"%s\" }", pageContents);
-            return new GatewayResponse(output, headers, 200);
+            return new GatewayResponse(new ObjectMapper().writeValueAsString(gatewayResponseBody), headers, 200);
         } catch (IOException e) {
             return new GatewayResponse("{}", headers, 500);
         }
